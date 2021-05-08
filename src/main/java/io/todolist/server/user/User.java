@@ -1,5 +1,6 @@
 package io.todolist.server.user;
 
+import io.todolist.server.exception.NotValidUserException;
 import io.todolist.server.exception.TaskNotFoundException;
 
 import java.time.LocalDate;
@@ -49,24 +50,21 @@ public class User {
         return tasks;
     }
 
-    public boolean isValid() {
-        LocalDate localDate = LocalDate.now().minusYears(13);
+    public void userVerification() {
         String regex = "^(.+)@(.+)$";
 
-        if (!localDate.isAfter(birthdate)) {
-            return false;
+        if (!LocalDate.now().minusYears(13).isAfter(birthdate)) {
+            throw new NotValidUserException("The age specified must at least be 13. (given age : '"+birthdate+"')");
         }
         if (this.lastname.equals("") || this.firstname.equals("")) {
-            return false;
+            throw new NotValidUserException("Firstname and lastname must be specified");
         }
         if (this.password.length() < 8 || this.password.length() > 40){
-            return false;
+            throw new NotValidUserException("Password length must be between 8 and 40 characters. (password length : " + password.length() + ")");
         }
         if (!this.email.matches(regex)) {
-            return false;
+            throw new NotValidUserException("Email format must be valid. (Example of email : 'email@email.com')");
         }
-
-        return true;
     }
 
     public void addTask(Task task) {
