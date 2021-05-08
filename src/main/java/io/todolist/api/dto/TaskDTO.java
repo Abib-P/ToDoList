@@ -1,5 +1,7 @@
 package io.todolist.api.dto;
 
+import io.todolist.server.user.Task;
+
 import javax.validation.constraints.NotBlank;
 
 public class TaskDTO {
@@ -7,6 +9,14 @@ public class TaskDTO {
     private String name;
     @NotBlank
     private String content;
+
+    public TaskDTO() {
+    }
+
+    public TaskDTO(Task task) {
+        this.name = task.getName();
+        this.content = task.getContent();
+    }
 
     public String getContent() {
         return content;

@@ -40,7 +40,7 @@ public class UserController {
                 userDTO.getBirthdate(),
                 userDTO.getPassword()
         );
-        userService.createUser(user);
+        userService.addUser(user);
     }
 
     @DeleteMapping(value = "/users/{email}")
