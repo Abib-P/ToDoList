@@ -3,7 +3,7 @@ package io.todolist.server.servise;
 import io.todolist.server.exception.TaskContentHasTooManyCharactersException;
 import io.todolist.server.exception.TaskCreationUnderThirtyMinuteException;
 import io.todolist.server.exception.TaskNameAlreadyTakenException;
-import io.todolist.server.exception.TooManyTasksInToDoList;
+import io.todolist.server.exception.TooManyTasksInToDoListException;
 import io.todolist.server.repository.UserRepository;
 import io.todolist.server.user.Task;
 import io.todolist.server.user.User;
@@ -47,7 +47,7 @@ class TaskServiceTest {
         }
         given(userRepository.getUsers()).willReturn(List.of(user));
 
-        String errorMessage = assertThrows(TooManyTasksInToDoList.class, () -> {
+        String errorMessage = assertThrows(TooManyTasksInToDoListException.class, () -> {
             taskService.addTaskToUser("email", task);
         }).getMessage();
 

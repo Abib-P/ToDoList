@@ -44,7 +44,7 @@ public class TaskService {
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));
         if (user.getTasks().size() >= 10) {
-            throw new TooManyTasksInToDoList();
+            throw new TooManyTasksInToDoListException();
         }
         Optional<Task> optionalTask = user.getTasks().stream().filter(task1 -> task1.getName().equals(task.getName())).findFirst();
         if (optionalTask.isPresent()) {

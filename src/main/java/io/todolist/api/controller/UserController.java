@@ -2,6 +2,7 @@ package io.todolist.api.controller;
 
 import io.todolist.api.dto.ErrorMessage;
 import io.todolist.api.dto.UserDTO;
+import io.todolist.server.exception.NotValidUserException;
 import io.todolist.server.exception.UserNotFoundException;
 import io.todolist.server.servise.UserService;
 import io.todolist.server.user.User;
@@ -53,5 +54,12 @@ public class UserController {
         ErrorMessage error = new ErrorMessage();
         error.setMessage(userNotFoundException.getMessage());
         return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(value = {NotValidUserException.class})
+    public ResponseEntity<ErrorMessage> manageNotValidUser(NotValidUserException notValidUserException){
+        ErrorMessage error = new ErrorMessage();
+        error.setMessage(notValidUserException.getMessage());
+        return ResponseEntity.status(400).body(error);
     }
 }

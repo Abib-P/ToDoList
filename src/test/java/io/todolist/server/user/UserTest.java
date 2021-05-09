@@ -9,6 +9,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
 
+    @Test
+    public void should_create_user() {
+        User user = new User("test@test.com", "test", "test", LocalDate.now().minusYears(27), "password");
+
+        assertEquals(user.getEmail(),"test@test.com");
+        assertEquals(user.getLastname(),"test");
+        assertEquals(user.getFirstname(),"test");
+        assertEquals(user.getBirthdate(),LocalDate.now().minusYears(27));
+        assertEquals(user.getPassword(),"password");
+    }
 
     @Test
     public void should_user_be_valid_given_valid_parameters() {
