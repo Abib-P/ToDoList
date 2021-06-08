@@ -4,7 +4,7 @@ import io.todolist.server.exception.TaskContentHasTooManyCharactersException;
 import io.todolist.server.exception.TaskCreationUnderThirtyMinuteException;
 import io.todolist.server.exception.TaskNameAlreadyTakenException;
 import io.todolist.server.exception.TooManyTasksInToDoListException;
-import io.todolist.server.repository.UserRepository;
+import io.todolist.server.repository.UserRepositoryInMemory;
 import io.todolist.server.user.Task;
 import io.todolist.server.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,14 +28,14 @@ class TaskServiceTest {
     TaskService taskService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepositoryInMemory userRepositoryInMemory;
 
     @Mock
     private EmailSenderService emailSenderService;
 
     @BeforeEach
     void setup() {
-        taskService = new TaskService(userRepository, emailSenderService);
+        taskService = new TaskService(userRepositoryInMemory, emailSenderService);
     }
 
     @Test
@@ -45,7 +45,7 @@ class TaskServiceTest {
         for (int i = 0; i < 10; i++) {
             user.addTask(task);
         }
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         String errorMessage = assertThrows(TooManyTasksInToDoListException.class, () -> {
             taskService.addTaskToUser("email", task);
@@ -60,7 +60,7 @@ class TaskServiceTest {
         Task task = new Task("task", null);
         user.addTask(task);
         Task task1 = new Task("task", null);
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         String errorMessage = assertThrows(TaskNameAlreadyTakenException.class, () -> {
             taskService.addTaskToUser("email", task1);
@@ -73,7 +73,7 @@ class TaskServiceTest {
     void should_throw_exception_given_a_new_task_with_more_than_1000_characters_in_content() {
         User user = new User("email", null, null, null, null);
         Task task = new Task("task", "a".repeat(1001));
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         String errorMessage = assertThrows(TaskContentHasTooManyCharactersException.class, () -> {
             taskService.addTaskToUser("email", task);
@@ -88,7 +88,7 @@ class TaskServiceTest {
         Task task = new Task("task", "null");
         user.addTask(task);
         Task task1 = new Task("task1", "null");
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         String errorMessage = assertThrows(TaskCreationUnderThirtyMinuteException.class, () -> {
             taskService.addTaskToUser("email", task1);
@@ -105,7 +105,7 @@ class TaskServiceTest {
             user.addTask(task);
         }
         Task task = new Task("OmegaTaskTheFuck", "null");
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         taskService.addTaskToUser("email", task);
 
@@ -120,7 +120,7 @@ class TaskServiceTest {
             user.addTask(task);
         }
         Task task = new Task("OmegaTaskTheFuck", "null");
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         taskService.addTaskToUser("email", task);
 

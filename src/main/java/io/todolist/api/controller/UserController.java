@@ -1,12 +1,8 @@
 package io.todolist.api.controller;
 
-import io.todolist.api.dto.ErrorMessage;
 import io.todolist.api.dto.UserDTO;
-import io.todolist.server.exception.NotValidUserException;
-import io.todolist.server.exception.UserNotFoundException;
 import io.todolist.server.servise.UserService;
 import io.todolist.server.user.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class UserController {
+public class UserController extends ErrorHandler {
 
     UserService userService;
 
@@ -47,19 +43,5 @@ public class UserController {
     @DeleteMapping(value = "/users/{email}")
     public UserDTO deleteUser(@PathVariable @Valid String email) {
         return new UserDTO(userService.deleteUser(email));
-    }
-
-    @ExceptionHandler(value = {UserNotFoundException.class})
-    public ResponseEntity<ErrorMessage> manageUserNotFound(UserNotFoundException userNotFoundException){
-        ErrorMessage error = new ErrorMessage();
-        error.setMessage(userNotFoundException.getMessage());
-        return ResponseEntity.status(404).body(error);
-    }
-
-    @ExceptionHandler(value = {NotValidUserException.class})
-    public ResponseEntity<ErrorMessage> manageNotValidUser(NotValidUserException notValidUserException){
-        ErrorMessage error = new ErrorMessage();
-        error.setMessage(notValidUserException.getMessage());
-        return ResponseEntity.status(400).body(error);
     }
 }

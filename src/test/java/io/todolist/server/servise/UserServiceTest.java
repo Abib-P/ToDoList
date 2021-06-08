@@ -1,8 +1,7 @@
 package io.todolist.server.servise;
 
 import io.todolist.server.exception.EmailAlreadyTakenException;
-import io.todolist.server.exception.NotValidUserException;
-import io.todolist.server.repository.UserRepository;
+import io.todolist.server.repository.UserRepositoryInMemory;
 import io.todolist.server.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,17 +22,17 @@ class UserServiceTest {
     private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepositoryInMemory userRepositoryInMemory;
 
     @BeforeEach
     void setup(){
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepositoryInMemory);
     }
 
     @Test
     void should_refuse_user_creation_with_bad_email_format() {
         User user = new User("email@email","null","null", LocalDate.now().minusYears(51),"nullnull");
-        given(userRepository.getUsers()).willReturn(List.of(user,user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user,user));
 
         String errorMessage = assertThrows(EmailAlreadyTakenException.class, ()->userService.addUser(user)).getMessage();
 
@@ -44,7 +42,7 @@ class UserServiceTest {
     @Test
     void should_get_user_by_email() {
         User user = new User("email@email","null","null", LocalDate.now().minusYears(51),"nullnull");
-        given(userRepository.getUsers()).willReturn(List.of(user));
+        given(userRepositoryInMemory.getUsers()).willReturn(List.of(user));
 
         User user1 = userService.getUser("email@email");
 

@@ -1,7 +1,7 @@
 package io.todolist.server.servise;
 
 import io.todolist.server.exception.*;
-import io.todolist.server.repository.UserRepository;
+import io.todolist.server.repository.UserRepositoryInMemory;
 import io.todolist.server.user.Task;
 import io.todolist.server.user.User;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,17 @@ import java.util.Optional;
 @Service
 public class TaskService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryInMemory userRepositoryInMemory;
 
     private final EmailSenderService emailSenderService;
 
-    TaskService(UserRepository userRepository, EmailSenderService emailSenderService) {
-        this.userRepository = userRepository;
+    TaskService(UserRepositoryInMemory userRepositoryInMemory, EmailSenderService emailSenderService) {
+        this.userRepositoryInMemory = userRepositoryInMemory;
         this.emailSenderService = emailSenderService;
     }
 
     public List<Task> getTasksOfUser(String email) {
-        User user = userRepository.getUsers().stream()
+        User user = userRepositoryInMemory.getUsers().stream()
                 .filter(user1 -> user1.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));
@@ -31,7 +31,7 @@ public class TaskService {
     }
 
     public Task getTaskOfUser(String email, String name) {
-        User user = userRepository.getUsers().stream()
+        User user = userRepositoryInMemory.getUsers().stream()
                 .filter(user1 -> user1.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));
@@ -39,7 +39,7 @@ public class TaskService {
     }
 
     public void addTaskToUser(String email, Task task) {
-        User user = userRepository.getUsers().stream()
+        User user = userRepositoryInMemory.getUsers().stream()
                 .filter(user1 -> user1.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));
@@ -71,7 +71,7 @@ public class TaskService {
     }
 
     public void deleteTaskOfUser(String email, String name) {
-        User user = userRepository.getUsers().stream()
+        User user = userRepositoryInMemory.getUsers().stream()
                 .filter(user1 -> user1.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException(email));

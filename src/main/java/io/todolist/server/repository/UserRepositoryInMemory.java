@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserRepository {
+public class UserRepositoryInMemory {
     List<User> users;
 
-    UserRepository() {
+    UserRepositoryInMemory() {
         this.users = new ArrayList<>();
     }
 

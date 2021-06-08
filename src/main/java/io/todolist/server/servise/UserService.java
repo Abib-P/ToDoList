@@ -2,7 +2,7 @@ package io.todolist.server.servise;
 
 import io.todolist.server.exception.EmailAlreadyTakenException;
 import io.todolist.server.exception.UserNotFoundException;
-import io.todolist.server.repository.UserRepository;
+import io.todolist.server.repository.UserRepositoryInMemory;
 import io.todolist.server.user.User;
 import org.springframework.stereotype.Service;
 
@@ -12,27 +12,27 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryInMemory userRepositoryInMemory;
 
-    UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    UserService(UserRepositoryInMemory userRepositoryInMemory) {
+        this.userRepositoryInMemory = userRepositoryInMemory;
     }
 
     public List<User> getUsers() {
-        return userRepository.getUsers();
+        return userRepositoryInMemory.getUsers();
     }
 
     public void addUser(User user) {
         user.userVerification();
-        Optional<User> optionalUser = userRepository.getUsers().stream().filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst();
+        Optional<User> optionalUser = userRepositoryInMemory.getUsers().stream().filter(user1 -> user1.getEmail().equals(user.getEmail())).findFirst();
         if (optionalUser.isPresent()) {
             throw new EmailAlreadyTakenException(user.getEmail());
         }
-        userRepository.addUser(user);
+        userRepositoryInMemory.addUser(user);
     }
 
     public User getUser(String email) {
-        return userRepository.getUsers()
+        return userRepositoryInMemory.getUsers()
                 .stream()
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public User deleteUser(String email) {
-        return userRepository.deleteUserByEmail(email);
+        return userRepositoryInMemory.deleteUserByEmail(email);
     }
 
 }

@@ -60,7 +60,7 @@ public class UserTest {
 
         String errorMessage = assertThrows(NotValidUserException.class, user::userVerification).getMessage();
 
-        assertTrue(errorMessage.contains("Cannot create new user : The age specified must at least be 13."));
+        assertTrue(errorMessage.startsWith("Cannot create new user : The age specified must at least be 13."));
     }
 
     @Test
