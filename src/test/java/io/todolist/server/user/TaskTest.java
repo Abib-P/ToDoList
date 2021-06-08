@@ -12,6 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TaskTest {
 
     @Test
+    public void should_not_delete() {
+        assertThat(true).isTrue();
+    }
+
+    @Test
     public void should_create_task_without_given_date() {
         Task task = new Task("name", "content");
 
