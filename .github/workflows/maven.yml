@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +22,9 @@ jobs:
         distribution: 'adopt'
     - name: Build with Maven
       run: mvn -B install --file pom.xml -DskipTests
-  test:
 
+  test:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
