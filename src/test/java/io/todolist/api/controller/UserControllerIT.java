@@ -71,17 +71,17 @@ class UserControllerIT {
                 .andExpect(status().isOk())
         .andExpect(content().json("""
                 [{
-                    "email" : "email@email.com",
-                    "lastname" : "lastname",
-                    "firstname" : "firstname",
-                    "birthdate" : "2000-08-16",
-                    "password" : "password"
-                },{
                     "email" : "email2@email2.com2",
                     "lastname" : "lastname2",
                     "firstname" : "firstname2",
                     "birthdate" : "2002-02-12",
                     "password" : "password2"
+                },{
+                    "email" : "email@email.com",
+                    "lastname" : "lastname",
+                    "firstname" : "firstname",
+                    "birthdate" : "2000-08-16",
+                    "password" : "password"
                 }]"""));
     }
 
