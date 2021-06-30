@@ -37,6 +37,5 @@ public class TaskController extends ErrorHandler {
     @DeleteMapping(value = "/users/{email}/tasks/{name}")
     public void deleteTask(@PathVariable @Valid String email, @PathVariable @Valid String name) {
         taskService.deleteTaskOfUser(email, name);
-        ;
     }
 }

@@ -2,6 +2,7 @@ package io.todolist.server.user;
 
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Task {
     private final String name;
@@ -30,5 +31,18 @@ public class Task {
 
     public LocalDateTime getCreationDate() {
         return creationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(name, task.name) && Objects.equals(content, task.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, content);
     }
 }

@@ -33,7 +33,7 @@ public class ErrorHandler {
     public ResponseEntity<ErrorMessage> manageTaskContentHasTooManyCharacters(TaskContentHasTooManyCharactersException taskContentHasTooManyCharactersException){
         ErrorMessage error = new ErrorMessage();
         error.setMessage(taskContentHasTooManyCharactersException.getMessage());
-        return ResponseEntity.status(404).body(error);
+        return ResponseEntity.status(418).body(error);
     }
 
     @ExceptionHandler(value = {TaskCreationUnderThirtyMinuteException.class})
@@ -47,13 +47,20 @@ public class ErrorHandler {
     public ResponseEntity<ErrorMessage> manageTaskNameAlreadyTaken(TaskNameAlreadyTakenException taskNameAlreadyTakenException){
         ErrorMessage error = new ErrorMessage();
         error.setMessage(taskNameAlreadyTakenException.getMessage());
-        return ResponseEntity.status(404).body(error);
+        return ResponseEntity.status(409).body(error);
     }
 
     @ExceptionHandler(value = {TooManyTasksInToDoListException.class})
     public ResponseEntity<ErrorMessage> manageTooManyTasksInToDoList(TooManyTasksInToDoListException tooManyTasksInToDoListException){
         ErrorMessage error = new ErrorMessage();
         error.setMessage(tooManyTasksInToDoListException.getMessage());
-        return ResponseEntity.status(404).body(error);
+        return ResponseEntity.status(426).body(error);
+    }
+
+    @ExceptionHandler(value = {EmailAlreadyTakenException.class})
+    public ResponseEntity<ErrorMessage> manageEmailAlreadyTaken(EmailAlreadyTakenException emailAlreadyTakenException){
+        ErrorMessage error = new ErrorMessage();
+        error.setMessage(emailAlreadyTakenException.getMessage());
+        return ResponseEntity.status(409).body(error);
     }
 }

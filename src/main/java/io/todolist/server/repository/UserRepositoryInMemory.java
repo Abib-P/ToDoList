@@ -8,21 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserRepositoryInMemory {
+public class UserRepositoryInMemory implements UserRepository{
     List<User> users;
 
     UserRepositoryInMemory() {
         this.users = new ArrayList<>();
     }
 
+    @Override
     public List<User> getUsers() {
         return users;
     }
 
+    @Override
     public void addUser(User user) {
         users.add(user);
     }
 
+    @Override
     public User deleteUserByEmail(String email) {
         User userToDelete = users.stream()
                 .filter(user -> user.getEmail().equals(email))

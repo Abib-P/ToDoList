@@ -6,6 +6,7 @@ import io.todolist.server.exception.TaskNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class User {
 
@@ -76,5 +77,18 @@ public class User {
                 .filter((task1)-> task1.getName().equals(name))
                 .findFirst().orElseThrow(()-> new TaskNotFoundException(name));
         tasks.remove(task);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(email, user.email) && Objects.equals(lastname, user.lastname) && Objects.equals(firstname, user.firstname) && Objects.equals(birthdate, user.birthdate) && Objects.equals(password, user.password) && Objects.equals(tasks, user.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, lastname, firstname, birthdate, password, tasks);
     }
 }
