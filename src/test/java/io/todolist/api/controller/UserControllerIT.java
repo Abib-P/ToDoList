@@ -76,6 +76,87 @@ class UserControllerIT {
     }
 
     @Test
+    public void should_create_1_user_and_denied_the_second_creation_because_the_email_is_already_used() throws Exception {
+        this.mockMvc.perform(post("/users")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                        {
+                            "email" : "email@email.com",
+                            "lastname" : "lastname",
+                            "firstname" : "firstname",
+                            "birthdate" : "2000-08-16",
+                            "password" : "password"
+                        }"""))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(post("/users")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                            {
+                                "email" : "email@email.com",
+                                "lastname" : "lastname",
+                                "firstname" : "firstname",
+                                "birthdate" : "2002-02-12",
+                                "password" : "password"
+                            }"""))
+                .andExpect(status().is(409))
+                .andExpect(content().json("{\"message\"=\"Email 'email@email.com' already taken\"}"));
+
+        this.mockMvc.perform(get("/users")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                [{
+                    "email" : "email@email.com",
+                    "lastname" : "lastname",
+                    "firstname" : "firstname",
+                    "birthdate" : "2000-08-16",
+                    "password" : "password"
+                }]"""));
+    }
+
+    @Test
+    public void should_create_1_user_and_denied_the_second_creation_because_user_is_too_young() throws Exception {
+        this.mockMvc.perform(post("/users")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                        {
+                            "email" : "email@email.com",
+                            "lastname" : "lastname",
+                            "firstname" : "firstname",
+                            "birthdate" : "2000-08-16",
+                            "password" : "password"
+                        }"""))
+                .andExpect(status().is(200));
+
+        mockMvc.perform(post("/users")
+                .contentType(APPLICATION_JSON)
+                .content("""
+                            {
+                                "email" : "email@email.com",
+                                "lastname" : "lastname",
+                                "firstname" : "firstname",
+                                "birthdate" : "2012-02-12",
+                                "password" : "password"
+                            }"""))
+                .andExpect(status().is(400))
+                .andExpect(content().json("{\"message\"=\"Cannot create new user : The age specified must at least be 13. (given age : '2012-02-12')\"}"));
+
+
+        this.mockMvc.perform(get("/users")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                [{
+                    "email" : "email@email.com",
+                    "lastname" : "lastname",
+                    "firstname" : "firstname",
+                    "birthdate" : "2000-08-16",
+                    "password" : "password"
+                }]"""));
+    }
+
+    @Test
     public void should_return_400_when_bad_formatted_json_is_send() throws Exception {
         this.mockMvc.perform(post("/users")
                 .contentType(APPLICATION_JSON)

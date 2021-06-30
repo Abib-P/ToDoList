@@ -31,7 +31,7 @@ class TaskControllerIT {
     }
 
     @Test
-    public void should_create_a_valid_task_and_denied_the_creation_of_the_second() throws Exception {
+    public void should_create_a_valid_task_and_denied_the_creation_of_the_second_because_too_early() throws Exception {
         this.mockMvc.perform(post("/users")
                 .contentType(APPLICATION_JSON)
                 .content("""
@@ -86,7 +86,7 @@ class TaskControllerIT {
     }
 
     @Test
-    public void should_get_an_error_when() throws Exception {
+    public void should_get_an_error_when_trying_to_create_task_with_same_name() throws Exception {
         this.mockMvc.perform(post("/users")
                 .contentType(APPLICATION_JSON)
                 .content("""
@@ -97,7 +97,7 @@ class TaskControllerIT {
                             "birthdate" : "2000-08-16",
                             "password" : "password"
                         }"""))
-                .andExpect(status().is(200));
+                .andExpect(status().isOk());
 
         this.mockMvc.perform(get("/users/email@email.com")
                 .contentType(APPLICATION_JSON))
@@ -124,11 +124,11 @@ class TaskControllerIT {
                 .contentType(APPLICATION_JSON)
                 .content("""
                         {
-                            "name" : "taskName2",
+                            "name" : "taskName",
                             "content" : "content"
                         }"""))
-                .andExpect(status().is(425))
-                .andExpect(content().json("{\"message\"=\"Cannot create new task within 30 minutes of the last task created.\"}"));
+                .andExpect(status().is(409))
+                .andExpect(content().json("{\"message\"=\"Task name is already taken.\"}"));
 
 
         this.mockMvc.perform(get("/users/email@email.com/tasks"))
@@ -138,14 +138,6 @@ class TaskControllerIT {
                                 "content" : "content"
                         }]"""))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    public void should_return_400_when_bad_formatted_json_is_send() throws Exception {
-        this.mockMvc.perform(post("/users/")
-                .contentType(APPLICATION_JSON)
-                .content("{\"\"}"))
-                .andExpect(status().isBadRequest());
     }
 
 }
